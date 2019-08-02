@@ -593,9 +593,12 @@ public class Lexer {
     public final void nextToken() {
         startPos = pos;
         bufPos = 0;
+
+        /*
         if (comments != null && comments.size() > 0) {
             comments = null;
         }
+        */
 
         this.lines = 0;
         int startLine = line;

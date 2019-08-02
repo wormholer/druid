@@ -66,25 +66,25 @@ public class PGExprParser extends SQLExprParser {
         }
     }
 
-    public PGExprParser(String sql){
+    public PGExprParser(String sql) {
         this(new PGLexer(sql));
         this.lexer.nextToken();
         this.dbType = JdbcConstants.POSTGRESQL;
     }
 
-    public PGExprParser(String sql, SQLParserFeature... features){
-        this(new PGLexer(sql));
+    public PGExprParser(String sql, SQLParserFeature... features) {
+        this(new PGLexer(sql, features));
         this.lexer.nextToken();
         this.dbType = JdbcConstants.POSTGRESQL;
     }
 
-    public PGExprParser(Lexer lexer){
+    public PGExprParser(Lexer lexer) {
         super(lexer);
         this.aggregateFunctions = AGGREGATE_FUNCTIONS;
         this.aggregateFunctionHashCodes = AGGREGATE_FUNCTIONS_CODES;
         this.dbType = JdbcConstants.POSTGRESQL;
     }
-    
+
     @Override
     public SQLDataType parseDataType() {
         if (lexer.token() == Token.TYPE) {
@@ -92,7 +92,7 @@ public class PGExprParser extends SQLExprParser {
         }
         return super.parseDataType();
     }
-    
+
     public PGSelectParser createSelectParser() {
         return new PGSelectParser(this);
     }
@@ -150,7 +150,7 @@ public class PGExprParser extends SQLExprParser {
             }
             return values;
         }
-        
+
         return super.primary();
     }
 
@@ -170,15 +170,15 @@ public class PGExprParser extends SQLExprParser {
         if (lexer.token() == Token.COLONCOLON) {
             lexer.nextToken();
             SQLDataType dataType = this.parseDataType();
-            
+
             PGTypeCastExpr castExpr = new PGTypeCastExpr();
-            
+
             castExpr.setExpr(expr);
             castExpr.setDataType(dataType);
 
             return primaryRest(castExpr);
         }
-        
+
         if (lexer.token() == Token.LBRACKET) {
             SQLArrayExpr array = new SQLArrayExpr();
             array.setExpr(expr);
@@ -187,9 +187,9 @@ public class PGExprParser extends SQLExprParser {
             accept(Token.RBRACKET);
             return primaryRest(array);
         }
-        
+
         if (expr.getClass() == SQLIdentifierExpr.class) {
-            String ident = ((SQLIdentifierExpr)expr).getName();
+            String ident = ((SQLIdentifierExpr) expr).getName();
 
             if (lexer.token() == Token.COMMA || lexer.token() == Token.RPAREN) {
                 return super.primaryRest(expr);
@@ -199,8 +199,7 @@ public class PGExprParser extends SQLExprParser {
                 if (lexer.token() != Token.LITERAL_ALIAS //
                         && lexer.token() != Token.LITERAL_CHARS //
                         && lexer.token() != Token.WITH) {
-                    return super.primaryRest(
-                            new SQLIdentifierExpr(ident));
+                    return super.primaryRest(new SQLIdentifierExpr(ident));
                 }
 
                 SQLTimestampExpr timestamp = new SQLTimestampExpr();
@@ -226,14 +225,12 @@ public class PGExprParser extends SQLExprParser {
                     accept(Token.LITERAL_CHARS);
                 }
 
-
                 return primaryRest(timestamp);
-            } else  if ("TIMESTAMPTZ".equalsIgnoreCase(ident)) {
+            } else if ("TIMESTAMPTZ".equalsIgnoreCase(ident)) {
                 if (lexer.token() != Token.LITERAL_ALIAS //
                         && lexer.token() != Token.LITERAL_CHARS //
                         && lexer.token() != Token.WITH) {
-                    return super.primaryRest(
-                            new SQLIdentifierExpr(ident));
+                    return super.primaryRest(new SQLIdentifierExpr(ident));
                 }
 
                 SQLTimestampExpr timestamp = new SQLTimestampExpr();
@@ -253,27 +250,26 @@ public class PGExprParser extends SQLExprParser {
                     accept(Token.LITERAL_CHARS);
                 }
 
-
                 return primaryRest(timestamp);
             } else if ("EXTRACT".equalsIgnoreCase(ident)) {
                 accept(Token.LPAREN);
-                
+
                 PGExtractExpr extract = new PGExtractExpr();
-                
+
                 String fieldName = lexer.stringVal();
                 PGDateField field = PGDateField.valueOf(fieldName.toUpperCase());
                 lexer.nextToken();
-                
+
                 extract.setField(field);
-                
+
                 accept(Token.FROM);
                 SQLExpr source = this.expr();
-                
+
                 extract.setSource(source);
-                
+
                 accept(Token.RPAREN);
-                
-                return primaryRest(extract);     
+
+                return primaryRest(extract);
             } else if ("POINT".equalsIgnoreCase(ident)) {
                 SQLExpr value = this.primary();
                 PGPointExpr point = new PGPointExpr();

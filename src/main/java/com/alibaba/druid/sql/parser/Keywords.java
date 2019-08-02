@@ -159,6 +159,8 @@ public class Keywords {
         map.put("OUT", Token.OUT);
         map.put("INOUT", Token.INOUT);
         map.put("LIMIT", Token.LIMIT);
+        map.put("TEMP", Token.TEMP);
+        map.put("TEMPORARY", Token.TEMPORARY);
 
         DEFAULT_KEYWORDS = new Keywords(map);
 

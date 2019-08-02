@@ -2795,6 +2795,11 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         } else if (SQLCreateTableStatement.Type.LOCAL_TEMPORARY.equals(tableType)) {
             print0(ucase ? "LOCAL TEMPORARY " : "local temporary ");
         }
+        else if (SQLCreateTableStatement.Type.NORMAL_TEMPORARY.equals(tableType))
+        {
+            print0(ucase ? "TEMP " : "temp ");
+        }
+
         print0(ucase ? "TABLE " : "table ");
 
         if (x.isIfNotExiists()) {
