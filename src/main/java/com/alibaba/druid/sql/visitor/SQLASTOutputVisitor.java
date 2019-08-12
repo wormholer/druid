@@ -3365,31 +3365,31 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
     public boolean visit(SQLTruncateStatement x) {
         print0(ucase ? "TRUNCATE TABLE " : "truncate table ");
         printAndAccept(x.getTableSources(), ", ");
-        
+
         if (x.isDropStorage()) {
-            print0(ucase ? " DROP STORAGE" : " drop storage");    
+            print0(ucase ? " DROP STORAGE" : " drop storage");
         }
-        
+
         if (x.isReuseStorage()) {
-            print0(ucase ? " REUSE STORAGE" : " reuse storage");    
+            print0(ucase ? " REUSE STORAGE" : " reuse storage");
         }
-        
+
         if (x.isIgnoreDeleteTriggers()) {
-            print0(ucase ? " IGNORE DELETE TRIGGERS" : " ignore delete triggers");    
+            print0(ucase ? " IGNORE DELETE TRIGGERS" : " ignore delete triggers");
         }
-        
+
         if (x.isRestrictWhenDeleteTriggers()) {
-            print0(ucase ? " RESTRICT WHEN DELETE TRIGGERS" : " restrict when delete triggers");    
+            print0(ucase ? " RESTRICT WHEN DELETE TRIGGERS" : " restrict when delete triggers");
         }
-        
+
         if (x.isContinueIdentity()) {
             print0(ucase ? " CONTINUE IDENTITY" : " continue identity");
         }
-        
+
         if (x.isImmediate()) {
-            print0(ucase ? " IMMEDIATE" : " immediate");    
+            print0(ucase ? " IMMEDIATE" : " immediate");
         }
-        
+
         return false;
     }
 
@@ -3769,11 +3769,11 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             printAndAccept(x.getPartitionBy(), ", ");
             print(' ');
         }
-        
+
         if (x.getOrderBy() != null) {
             x.getOrderBy().accept(this);
         }
-        
+
         if (x.getOf() != null) {
             print0(ucase ? " OF " : " of ");
             x.getOf().accept(this);
@@ -3820,7 +3820,7 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
                 print0(ucase ? " FOLLOWING" : " following");
             }
         }
-        
+
         print(')');
         return false;
     }
@@ -3833,18 +3833,18 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             expr.accept(this);
         }
     }
-    
+
     @Override
     public boolean visit(SQLKeep x) {
         if (x.getDenseRank() == SQLKeep.DenseRank.FIRST) {
-            print0(ucase ? "KEEP (DENSE_RANK FIRST " : "keep (dense_rank first ");    
+            print0(ucase ? "KEEP (DENSE_RANK FIRST " : "keep (dense_rank first ");
         } else {
             print0(ucase ? "KEEP (DENSE_RANK LAST " : "keep (dense_rank last ");
         }
-        
+
         x.getOrderBy().accept(this);
         print(')');
-        
+
         return false;
     }
 
@@ -4442,11 +4442,11 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         }
 
         if (x.isKey()) {
-            print0(ucase ? "KEY " : "key ");    
+            print0(ucase ? "KEY " : "key ");
         } else {
             print0(ucase ? "INDEX " : "index ");
         }
-        
+
         if (x.getName() != null) {
             x.getName().accept(this);
             print(' ');
@@ -4691,7 +4691,7 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         if (x.isIfNotExists()) {
             print0(ucase ? "IF NOT EXISTS " : "if not exists ");
         }
-        
+
         if (x.getPartitionCount() != null) {
             print0(ucase ? "PARTITION PARTITIONS " : "partition partitions ");
             x.getPartitionCount().accept(this);
@@ -4702,7 +4702,7 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             printAndAccept(x.getPartitions(), ", ");
             print(')');
         }
-        
+
         return false;
     }
 
@@ -5505,14 +5505,14 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         x.getCount().accept(this);
         return false;
     }
-    
+
     @Override
     public boolean visit(SQLAlterTableTruncatePartition x) {
         print0(ucase ? "TRUNCATE PARTITION " : "truncate partition ");
         printPartitions(x.getPartitions());
         return false;
     }
-    
+
     @Override
     public boolean visit(SQLAlterTableDiscardPartition x) {
         print0(ucase ? "DISCARD PARTITION " : "discard partition ");
@@ -5524,58 +5524,58 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
 
         return false;
     }
-    
+
     @Override
     public boolean visit(SQLAlterTableImportPartition x) {
         print0(ucase ? "IMPORT PARTITION " : "import partition ");
         printPartitions(x.getPartitions());
         return false;
     }
-    
+
     @Override
     public boolean visit(SQLAlterTableAnalyzePartition x) {
         print0(ucase ? "ANALYZE PARTITION " : "analyze partition ");
-        
+
         printPartitions(x.getPartitions());
         return false;
     }
-    
+
     protected void printPartitions(List<SQLName> partitions) {
         if (partitions.size() == 1 && "ALL".equalsIgnoreCase(partitions.get(0).getSimpleName())) {
-            print0(ucase ? "ALL" : "all");    
+            print0(ucase ? "ALL" : "all");
         } else {
             printAndAccept(partitions, ", ");
         }
     }
-    
+
     @Override
     public boolean visit(SQLAlterTableCheckPartition x) {
         print0(ucase ? "CHECK PARTITION " : "check partition ");
         printPartitions(x.getPartitions());
         return false;
     }
-    
+
     @Override
     public boolean visit(SQLAlterTableOptimizePartition x) {
         print0(ucase ? "OPTIMIZE PARTITION " : "optimize partition ");
         printPartitions(x.getPartitions());
         return false;
     }
-    
+
     @Override
     public boolean visit(SQLAlterTableRebuildPartition x) {
         print0(ucase ? "REBUILD PARTITION " : "rebuild partition ");
         printPartitions(x.getPartitions());
         return false;
     }
-    
+
     @Override
     public boolean visit(SQLAlterTableRepairPartition x) {
         print0(ucase ? "REPAIR PARTITION " : "repair partition ");
         printPartitions(x.getPartitions());
         return false;
     }
-    
+
     @Override
     public boolean visit(SQLSequenceExpr x) {
         x.getSequence().accept(this);
@@ -5583,7 +5583,7 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         print0(ucase ? x.getFunction().name : x.getFunction().name_lcase);
         return false;
     }
-    
+
     @Override
     public boolean visit(SQLMergeStatement x) {
         print0(ucase ? "MERGE " : "merge ");
