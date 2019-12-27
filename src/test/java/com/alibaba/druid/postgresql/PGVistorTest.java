@@ -2,6 +2,7 @@ package com.alibaba.druid.postgresql;
 
 import java.util.List;
 
+import com.alibaba.druid.sql.dialect.oracle.parser.OracleStatementParser;
 import org.junit.Test;
 
 import com.alibaba.druid.sql.ast.SQLStatement;
@@ -117,7 +118,16 @@ public class PGVistorTest {
                 + "         and P1.Account_Modifier_Num= P5.Account_Modifier_Num             \n" + "    WHERE \n"
                 + "        1=1  -- P1.Cust_No <>''\n" + ") T WHERE rn=1\n"
                 + "--    Qualify SUM(1) OVER(PARTITION BY P1.Account_Num,P1.Account_Modifier_Num,P1.Cust_Acct_Num ROWS UNBOUNDED PRECEDING) = 1 \n";
-        PGSQLStatementParser parser = new PGSQLStatementParser(sql,
+
+        String sql2 = "select a.b ,----aaaa \n a.c ----cccc \nfrom table a";
+        String sql3 = "CREATE TABLE dbo.table01 (\n" +
+                " id        bigserial NOT NULL,\n" +
+                " cre_time  timestamp without time zone,\n" +
+                " note      varchar(30)\n" +
+                " ) PARTITION BY RANGE (cre_time)\n" +
+                " WITH (\n" +
+                " OIDS = FALSE)";
+        PGSQLStatementParser parser = new PGSQLStatementParser(sql3,
                 new SQLParserFeature[] { SQLParserFeature.KeepComments });
 
         List<SQLStatement> stmtList = parser.parseStatementList();

@@ -31,21 +31,22 @@ import com.alibaba.druid.util.JdbcConstants;
 public class SQLSelectItem extends SQLObjectImpl implements SQLReplaceable {
 
     protected SQLExpr expr;
-    protected String  alias;
+    protected String alias;
+    protected String comment;
 
     protected boolean connectByRoot = false;
 
     protected transient long aliasHashCode64;
 
-    public SQLSelectItem(){
+    public SQLSelectItem() {
 
     }
 
-    public SQLSelectItem(SQLExpr expr){
+    public SQLSelectItem(SQLExpr expr) {
         this(expr, null);
     }
 
-    public SQLSelectItem(SQLExpr expr, String alias){
+    public SQLSelectItem(SQLExpr expr, String alias) {
         this.expr = expr;
         this.alias = alias;
 
@@ -53,12 +54,23 @@ public class SQLSelectItem extends SQLObjectImpl implements SQLReplaceable {
             expr.setParent(this);
         }
     }
-    
-    public SQLSelectItem(SQLExpr expr, String alias, boolean connectByRoot){
+
+    public SQLSelectItem(SQLExpr expr, String alias, boolean connectByRoot) {
         this.connectByRoot = connectByRoot;
         this.expr = expr;
         this.alias = alias;
-        
+
+        if (expr != null) {
+            expr.setParent(this);
+        }
+    }
+
+    public SQLSelectItem(SQLExpr expr, String alias, String comment, boolean connectByRoot) {
+        this.connectByRoot = connectByRoot;
+        this.expr = expr;
+        this.comment = comment;
+        this.alias = alias;
+
         if (expr != null) {
             expr.setParent(this);
         }
@@ -100,12 +112,20 @@ public class SQLSelectItem extends SQLObjectImpl implements SQLReplaceable {
         return this.alias;
     }
 
+    public String getComment() {
+        return this.comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public void setAlias(String alias) {
         this.alias = alias;
     }
 
     public void output(StringBuffer buf) {
-        if(this.connectByRoot) {
+        if (this.connectByRoot) {
             buf.append(" CONNECT_BY_ROOT ");
         }
         this.expr.output(buf);
@@ -133,16 +153,23 @@ public class SQLSelectItem extends SQLObjectImpl implements SQLReplaceable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
         SQLSelectItem other = (SQLSelectItem) obj;
         if (alias == null) {
-            if (other.alias != null) return false;
-        } else if (!alias.equals(other.alias)) return false;
+            if (other.alias != null)
+                return false;
+        } else if (!alias.equals(other.alias))
+            return false;
         if (expr == null) {
-            if (other.expr != null) return false;
-        } else if (!expr.equals(other.expr)) return false;
+            if (other.expr != null)
+                return false;
+        } else if (!expr.equals(other.expr))
+            return false;
         return true;
     }
 
@@ -199,8 +226,7 @@ public class SQLSelectItem extends SQLObjectImpl implements SQLReplaceable {
 
         if (expr instanceof SQLAllColumnExpr) {
             SQLTableSource resolvedTableSource = ((SQLAllColumnExpr) expr).getResolvedTableSource();
-            if (resolvedTableSource != null
-                    && resolvedTableSource.findColumn(alias_hash) != null) {
+            if (resolvedTableSource != null && resolvedTableSource.findColumn(alias_hash) != null) {
                 return true;
             }
             return false;
@@ -214,8 +240,7 @@ public class SQLSelectItem extends SQLObjectImpl implements SQLReplaceable {
             String ident = ((SQLPropertyExpr) expr).getName();
             if ("*".equals(ident)) {
                 SQLTableSource resolvedTableSource = ((SQLPropertyExpr) expr).getResolvedTableSource();
-                if (resolvedTableSource != null
-                        && resolvedTableSource.findColumn(alias_hash) != null) {
+                if (resolvedTableSource != null && resolvedTableSource.findColumn(alias_hash) != null) {
                     return true;
                 }
                 return false;

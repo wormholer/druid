@@ -3284,7 +3284,7 @@ public class SQLExprParser extends SQLParser {
             }
 
             if (token == Token.COMMA) {
-                return new SQLSelectItem(expr, null, connectByRoot);
+                return new SQLSelectItem(expr, null, lexer.getComment(),connectByRoot);
             }
 
             if (token == Token.AS) {
@@ -3365,7 +3365,7 @@ public class SQLExprParser extends SQLParser {
                 break;
         }
 
-        SQLSelectItem selectItem = new SQLSelectItem(expr, alias, connectByRoot);
+        SQLSelectItem selectItem = new SQLSelectItem(expr, alias, lexer.getComment(), connectByRoot);
         if (lexer.token == Token.HINT && !lexer.isEnabled(SQLParserFeature.StrictForWall)) {
             String comment = "/*" + lexer.stringVal() + "*/";
             selectItem.addAfterComment(comment);

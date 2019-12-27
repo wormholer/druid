@@ -128,6 +128,7 @@ import com.alibaba.druid.sql.dialect.oracle.parser.OracleFunctionDataType;
 import com.alibaba.druid.sql.dialect.oracle.parser.OracleProcedureDataType;
 import com.alibaba.druid.util.JdbcConstants;
 import com.alibaba.druid.util.JdbcUtils;
+import com.alibaba.druid.util.StringUtils;
 
 public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements ParameterizedVisitor, PrintableVisitor {
     public static Boolean defaultPrintStatementAfterSemi;
@@ -143,7 +144,8 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
     protected final Appendable appender;
     protected int indentCount = 0;
     protected boolean ucase = true;
-    protected int selectListNumberOfLine = 5;
+    protected int selectListNumberOfLine = 1;
+    protected int commentPos = 100;
 
     protected boolean groupItemSingleLine = false;
 
@@ -2082,6 +2084,19 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
                 print('"');
             }
         }
+
+        String comment = x.getComment();
+
+        if (!StringUtils.isEmpty(comment))
+        {
+            int len = x.getExpr().toString().length();
+            if ( len < commentPos )
+                for(int i = 0; i <  commentPos - len ; i ++)
+                    print(' ');
+            print("  --");
+            print0(comment);
+        }
+
         return false;
     }
 
