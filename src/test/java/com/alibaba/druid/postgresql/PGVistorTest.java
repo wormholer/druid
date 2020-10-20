@@ -120,14 +120,56 @@ public class PGVistorTest {
                 + "--    Qualify SUM(1) OVER(PARTITION BY P1.Account_Num,P1.Account_Modifier_Num,P1.Cust_Acct_Num ROWS UNBOUNDED PRECEDING) = 1 \n";
 
         String sql2 = "select a.b ,----aaaa \n a.c ----cccc \nfrom table a";
-        String sql3 = "CREATE TABLE dbo.table01 (\n" +
-                " id        bigserial NOT NULL,\n" +
-                " cre_time  timestamp without time zone,\n" +
-                " note      varchar(30)\n" +
-                " ) PARTITION BY RANGE (cre_time)\n" +
-                " WITH (\n" +
-                " OIDS = FALSE)";
-        PGSQLStatementParser parser = new PGSQLStatementParser(sql3,
+        String sql3 = "CREATE TABLE ecas_app.ecas_corp_loan_rmb_int\n" +
+                "(\n" +
+                "  yngyjg character varying(4), -- 贷款所属营业机构号\n" +
+                "  jigomc character varying(80), -- 贷款所属营业机构中文名\n" +
+                "  yjfhjg character varying(4), -- 一级分行机构号\n" +
+                "  yjfhmc character varying(40), -- 一级分行机构名称\n" +
+                "  huobdh character varying(2), -- 贷款的币种\n" +
+                "  huobmc character varying(16), -- 币种名称\n" +
+                "  kmuhao character varying(6), -- 贷款本金的科目号\n" +
+                "  jiejuh character varying(16), -- 贷款借据号\n" +
+                "  kehhao character varying(10), -- 贷款的客户号\n" +
+                "  kehzwm character varying(80), -- 贷款的客户中文名\n" +
+                "  wjdkfl character varying(20), -- 五级分类\n" +
+                "  daoqrq character varying(8), -- 贷款的到期日\n" +
+                "  lixihj numeric(38,6), -- 利息合计\n" +
+                "  jieszh character varying(20), -- 贷款的结算账号\n" +
+                "  zhhuye numeric(15,2), -- 账户余额\n" +
+                "  djieye numeric(15,2), -- 冻结余额\n" +
+                "  drhkzh character varying(20), -- 贷款的第二还款账号\n" +
+                "  drzhye numeric(15,2), -- 第二还款账户余额\n" +
+                "  benjhu character varying(20), -- 贷款的本金户\n" +
+                "  lilvll numeric(20,7), -- 本金户的利率\n" +
+                "  bjhyue numeric(15,2), -- 贷款本金户余额\n" +
+                "  bjhjis numeric(20,2), -- 贷款本金户积数\n" +
+                "  yjajlx numeric(15,2), -- 贷款本金户应加减利息\n" +
+                "  bjhlix numeric(20,2), -- 贷款本金户利息\n" +
+                "  qxhzhh character varying(20), -- 贷款欠息户\n" +
+                "  qxhull numeric(9,7), -- 欠息户利率\n" +
+                "  qxhyue numeric(15,2), -- 欠息户余额\n" +
+                "  qxhjis numeric(20,2), -- 欠息户积数\n" +
+                "  qyjjlx numeric(13,2), -- 欠息户应加减利息\n" +
+                "  qxhlix numeric(25,8), -- 欠息户利息\n" +
+                "  bwfxzh character varying(20), -- 表外复息户\n" +
+                "  bwfxll numeric(9,7), -- 复息户利率\n" +
+                "  bwfxye numeric(15,2), -- 复息户账户余额\n" +
+                "  bwfxjs numeric(20,2), -- 复息户积数\n" +
+                "  fxyjlx numeric(13,2), -- 复息户应加减利息\n" +
+                "  bwfxlx numeric(25,8), -- 复息户利息\n" +
+                "  sor_data_date date, -- 数据日期\n" +
+                "  xcjxrq character varying(8), -- 结息日期\n" +
+                "  manageuser character varying(20), -- 客户经理\n" +
+                "  manageorg character varying(30) -- 客户经理所属机构\n" +
+                ")";
+
+
+        String sql4 = "CREATE TABLE plbs_app.plbs_app_ydhd_trade\n" +
+                "(txn_time time without time zone\n" +
+                ")";
+
+        PGSQLStatementParser parser = new PGSQLStatementParser(sql4,
                 new SQLParserFeature[] { SQLParserFeature.KeepComments });
 
         List<SQLStatement> stmtList = parser.parseStatementList();

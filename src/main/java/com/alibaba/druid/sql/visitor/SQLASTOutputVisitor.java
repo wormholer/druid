@@ -145,7 +145,7 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
     protected int indentCount = 0;
     protected boolean ucase = true;
     protected int selectListNumberOfLine = 1;
-    protected int commentPos = 100;
+    protected int commentPos = 50;
 
     protected boolean groupItemSingleLine = false;
 
@@ -2065,7 +2065,8 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         SQLExpr expr = x.getExpr();
 
         if (expr instanceof SQLIdentifierExpr) {
-            print0(((SQLIdentifierExpr) expr).getName());
+            visit((SQLIdentifierExpr) expr);
+            //print0(((SQLIdentifierExpr) expr).getName());
         } else if (expr instanceof SQLPropertyExpr) {
             visit((SQLPropertyExpr) expr);
         } else {
@@ -2090,6 +2091,8 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
         if (!StringUtils.isEmpty(comment))
         {
             int len = x.getExpr().toString().length();
+            if (x.getAlias() != null)
+                len += x.getAlias().length() + 4;
             if ( len < commentPos )
                 for(int i = 0; i <  commentPos - len ; i ++)
                     print(' ');
@@ -4673,12 +4676,16 @@ public class SQLASTOutputVisitor extends SQLASTVisitorAdapter implements Paramet
             return;
         }
 
+        print0("-- ");
+        print0(comment);
+        /*
         if (comment.startsWith("--") && comment.length() > 2 && comment.charAt(2) != ' ') {
             print0("-- ");
             print0(comment.substring(2));
         } else {
             print0(comment);
         }
+        */
     }
 
     protected void printlnComments(List<String> comments) {

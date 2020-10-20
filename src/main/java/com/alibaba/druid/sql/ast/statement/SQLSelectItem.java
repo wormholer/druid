@@ -55,7 +55,7 @@ public class SQLSelectItem extends SQLObjectImpl implements SQLReplaceable {
         }
     }
 
-    public SQLSelectItem(SQLExpr expr, String alias, boolean connectByRoot) {
+    /*public SQLSelectItem(SQLExpr expr, String alias, boolean connectByRoot) {
         this.connectByRoot = connectByRoot;
         this.expr = expr;
         this.alias = alias;
@@ -64,7 +64,7 @@ public class SQLSelectItem extends SQLObjectImpl implements SQLReplaceable {
             expr.setParent(this);
         }
     }
-
+*/
     public SQLSelectItem(SQLExpr expr, String alias, String comment, boolean connectByRoot) {
         this.connectByRoot = connectByRoot;
         this.expr = expr;

@@ -15,12 +15,6 @@
  */
 package com.alibaba.druid.sql.parser;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLCommentHint;
 import com.alibaba.druid.sql.ast.SQLDataType;
@@ -98,6 +92,12 @@ import com.alibaba.druid.sql.dialect.oracle.ast.expr.OracleArgumentExpr;
 import com.alibaba.druid.sql.dialect.postgresql.ast.expr.PGTypeCastExpr;
 import com.alibaba.druid.util.FnvHash;
 import com.alibaba.druid.util.JdbcConstants;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class SQLExprParser extends SQLParser {
 
@@ -2647,7 +2647,7 @@ public class SQLExprParser extends SQLParser {
             dataType.setName("DOUBLE PRECISION");
         }
 
-        if (FnvHash.Constants.TIMESTAMP == dataType.nameHashCode64()) {
+        if (FnvHash.Constants.TIMESTAMP == dataType.nameHashCode64() || FnvHash.Constants.TIME  == dataType.nameHashCode64()) {
             if (lexer.identifierEquals(FnvHash.Constants.WITHOUT)) {
                 lexer.nextToken();
                 acceptIdentifier("TIME");
@@ -3302,13 +3302,13 @@ public class SQLExprParser extends SQLParser {
                     }
                 }
 
-                return new SQLSelectItem(expr, as, connectByRoot);
+                return new SQLSelectItem(expr, as, lexer.getComment(), connectByRoot);
             }
 
             if (token == Token.LITERAL_ALIAS) {
                 String as = lexer.stringVal();
                 lexer.nextTokenComma();
-                return new SQLSelectItem(expr, as, connectByRoot);
+                return new SQLSelectItem(expr, as, lexer.getComment(), connectByRoot);
             }
 
             if ((token == Token.IDENTIFIER && hash_lower != FnvHash.Constants.CURRENT)
@@ -3331,7 +3331,7 @@ public class SQLExprParser extends SQLParser {
                     as = lexer.stringVal();
                     lexer.nextTokenComma();
                 }
-                return new SQLSelectItem(expr, as, connectByRoot);
+                return new SQLSelectItem(expr, as, lexer.getComment(), connectByRoot);
             }
 
             if (token == Token.LPAREN) {
@@ -3344,7 +3344,7 @@ public class SQLExprParser extends SQLParser {
         } else if (token == Token.STAR) {
             expr = new SQLAllColumnExpr();
             lexer.nextToken();
-            return new SQLSelectItem(expr, null, connectByRoot);
+            return new SQLSelectItem(expr, null, lexer.getComment(), connectByRoot);
         } else if (token == Token.DO || token == Token.JOIN) {
             expr = this.name();
             expr = this.exprRest(expr);

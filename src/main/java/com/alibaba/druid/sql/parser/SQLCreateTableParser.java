@@ -179,6 +179,12 @@ public class SQLCreateTableParser extends SQLDDLParser {
             accept(Token.RPAREN);
         }
 
+        if (lexer.token == Token.AS) {
+            lexer.nextToken();
+            SQLSelect select = this.createSQLSelectParser().select();
+            createTable.setSelect(select);
+        }
+
         return createTable;
     }
 

@@ -681,6 +681,10 @@ public class SQLSelectParser extends SQLParser {
             }
 
             lexer.nextToken();
+
+            // if comment is behind comma
+            if (selectItem.getComment() == null && lexer.getComment() != null)
+                selectItem.setComment(lexer.getComment());
         }
     }
 
